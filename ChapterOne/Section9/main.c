@@ -1,35 +1,56 @@
 #include <stdio.h>
-#define MAXLINE 1000
+#define MAXLENGTH 1000
+#define THRESHOLD 5
 
 int get_line(char line[], int maxline);
 void copy(char to[], char from[]);
+void append(char to[], char from[], int a, int b);
 
 main() {
   // exercise 1-16
-  char c;
-  char longest_line[MAXLINE];
-  char line[MAXLINE];
-  int longest, current, i;
+  char longest_line[MAXLENGTH];
+  char line[MAXLENGTH];
+  int longest, current;
 
-  while ((current = get_line(line, MAXLINE)) > 0) {
-    if (current > longest) { 
-     longest = current;
-     copy(longest_line, line);
+  longest = 0;
+  // while ((current = get_line(line, MAXLENGTH)) > 0) {
+  //   if (current > longest) { 
+  //    longest = current;
+  //    copy(longest_line, line);
+  //   }
+  // }
+  
+  // printf("\n%s \n", longest_line);
+
+  // exercise 1-17
+  char above_threshold[MAXLENGTH]; 
+  int total_length, total_words;
+  total_length = 0;
+  
+  while ((current = get_line(line, MAXLENGTH)) > 0) {
+    if (current > THRESHOLD) {
+      ++total_words;
+      total_length += current;
+      if (total_length - current == 0)
+        copy(above_threshold, line);
+      else
+        append(above_threshold, line, (total_length - current + (total_words - 2)), (total_length + (total_words - 2)));
     }
   }
-  
-  if (longest > 0)
-    printf("\n%s", longest_line);
-  printf("\n%d\n", longest);
+
+  printf("\n%s \n", above_threshold);
 }
-
+  
+  
 int get_line(char line[], int maxline) {
-  int i;
-  char c;
+  int i, c;
 
-  for (i = 0; i < maxline - 1 && (c = getchar()) != '\n' && c != EOF; ++i) {
+  i = 0;
+  while (i < maxline - 1 && (c = getchar()) != EOF && c != '\n') {
     line[i] = c;
+    ++i;
   }
+
   line[i] = '\0';
   return i; 
 }
@@ -40,6 +61,17 @@ void copy(char to[], char from[]) {
   i = 0;
   while ((to[i] = from[i]) != '\0')
     ++i;
-  ++i;
-  to[i] = '\0';
+}
+
+void append(char to[], char from[], int start, int end) {
+  int i, j;
+
+  j = 0;
+  to[start] = '\n';
+  for (i = start + 1; i <= end; ++i) {
+    to[i] = from[j];
+    ++j;
+  }
+
+  to[end+1] = '\0';
 }
