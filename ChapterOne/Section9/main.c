@@ -1,6 +1,6 @@
 #include <stdio.h>
 #define MAXLENGTH 1000
-#define THRESHOLD 5
+#define THRESHOLD 80
 
 int get_line(char line[], int maxline);
 void copy(char to[], char from[]);
@@ -38,7 +38,8 @@ main() {
     }
   }
 
-  printf("\n%s \n", above_threshold);
+  if (total_words > 0)
+    printf("\n%s \n", above_threshold);
 }
   
   
