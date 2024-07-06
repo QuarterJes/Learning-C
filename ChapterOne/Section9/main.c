@@ -25,7 +25,7 @@ main() {
   // exercise 1-17
   char above_threshold[MAXLENGTH]; 
   int total_length, total_words;
-  total_length = 0;
+  total_length = total_words = 0;
   
   while ((current = get_line(line, MAXLENGTH)) > 0) {
     if (current > THRESHOLD) {
