@@ -1,6 +1,6 @@
 #include <stdio.h>
 #define MAXLENGTH 1000
-#define THRESHOLD 80
+#define THRESHOLD 6
 
 int get_line(char line[], int maxline);
 void copy(char to[], char from[]);
@@ -12,7 +12,7 @@ main() {
   char line[MAXLENGTH];
   int longest, current;
 
-  longest = 0;
+  // longest = 0;
   // while ((current = get_line(line, MAXLENGTH)) > 0) {
   //   if (current > longest) { 
   //    longest = current;
@@ -24,23 +24,24 @@ main() {
 
   // exercise 1-17
   char above_threshold[MAXLENGTH]; 
-  int total_length, total_words;
-  total_length = total_words = 0;
+  int total_characters, total_lines;
+  total_characters = total_lines = 0;
   
   while ((current = get_line(line, MAXLENGTH)) > 0) {
-    if (current > THRESHOLD) {
-      ++total_words;
-      total_length += current;
-      if (total_length - current == 0)
+    if (current-1 > THRESHOLD) {
+      ++total_lines;
+      total_characters += current;
+      if (total_lines == 1)
         copy(above_threshold, line);
       else
-        append(above_threshold, line, (total_length - current + (total_words - 2)), (total_length + (total_words - 2)));
+        append(above_threshold, line, total_characters - current, total_characters);
     }
   }
 
-  if (total_words > 0)
+  if (total_lines > 0)
     printf("\n%s \n", above_threshold);
-}
+
+  }
   
   
 int get_line(char line[], int maxline) {
@@ -51,6 +52,8 @@ int get_line(char line[], int maxline) {
     line[i] = c;
     ++i;
   }
+  if (c == '\n')
+    ++i;
 
   line[i] = '\0';
   return i; 
@@ -62,17 +65,19 @@ void copy(char to[], char from[]) {
   i = 0;
   while ((to[i] = from[i]) != '\0')
     ++i;
+
+  to[i] = '\0';
 }
 
 void append(char to[], char from[], int start, int end) {
   int i, j;
 
   j = 0;
-  to[start] = '\n';
-  for (i = start + 1; i <= end; ++i) {
+  to[start-1] = '\n';
+  for (i = start; i < end - 1; ++i) {
     to[i] = from[j];
     ++j;
   }
 
-  to[end+1] = '\0';
+  to[end-1] = '\0';
 }
