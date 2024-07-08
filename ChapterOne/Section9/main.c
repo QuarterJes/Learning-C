@@ -6,6 +6,7 @@ int get_line(char line[], int maxline);
 void copy(char to[], char from[]);
 void append(char to[], char from[], int a, int b);
 int remove_blanks(char to[], int maxline);
+void reverse_string(char line[], char new_line[], int lenght);
 
 main() {
   // exercise 1-16
@@ -46,17 +47,36 @@ main() {
  
   // exercise 1-18
 
-  char current_line[MAXLENGTH], output[MAXLENGTH];
-  int line_characters, total_characters;  
-  line_characters = total_characters = 0;
+  // char current_line[MAXLENGTH], output[MAXLENGTH];
+  // int line_characters, total_characters;  
+  // line_characters = total_characters = 0;
  
-  while ((line_characters = remove_blanks(current_line, MAXLENGTH)) > 0) {
-    if (line_characters > 1) {
-      total_characters += line_characters;
-      if (total_characters - line_characters == 0)
-        copy(output, current_line);
+  // while ((line_characters = remove_blanks(current_line, MAXLENGTH)) > 0) {
+  //   if (line_characters > 1) {
+  //     total_characters += line_characters;
+  //     if (total_characters - line_characters == 0)
+  //       copy(output, current_line);
+  //     else
+  //       append(output, current_line, total_characters - line_characters, total_characters);
+  //   }
+  // }
+
+  // if (total_characters > 0)
+  //   printf("%s \n", output);
+
+  // exercise 1-19
+  char line[MAXLENGTH], output[MAXLENGTH], reversed_line[MAXLENGTH];
+  int length, total_characters;
+  total_characters = length = 0;
+
+  while ((length = get_line(line, MAXLENGTH)) > 0) {
+    if (length > 1) {
+      total_characters += length;
+      reverse_string(line, reversed_line, length-1);
+      if (total_characters - length == 0)
+        copy(output, reversed_line);
       else
-        append(output, current_line, total_characters - line_characters, total_characters);
+        append(output, reversed_line, total_characters - length, total_characters);
     }
   }
 
@@ -135,4 +155,12 @@ int remove_blanks(char line[], int maxline) {
     ++i;
 
   return i;
+}
+
+void reverse_string(char line[], char new_line[], int length) {
+  int i;
+
+  new_line[length] = '\0';
+  for (i = 0; i < length; ++i)
+    new_line[i] = line[length-i-1];
 }
