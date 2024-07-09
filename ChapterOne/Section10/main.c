@@ -14,12 +14,11 @@ main() {
   // me to do... i searched online and it seems that my
   // solution gives the expected outputs so hopefully it is right
   char raw_input[MAXLENGTH], clean_input[MAXLENGTH], output[MAXLENGTH];
-  int len, total, lines;
-  tabstop = 4;
-  total = lines = 0;
+  int len, total;
+  tabstop = 3;
+  total = 0;
   while ((len = get_line(raw_input, MAXLENGTH)) > 0) {
     if (len > 1) {
-      ++lines;
       total += len;
       detab(clean_input, raw_input);
       if (total - len == 0)
