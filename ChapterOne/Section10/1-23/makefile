@@ -1,2 +1,2 @@
 main: main.c
-	cc -g -ansi main.c -o main
+	gcc -g main.c -o main
