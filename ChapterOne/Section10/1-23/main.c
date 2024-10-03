@@ -1,44 +1,63 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void deleteComments(char *fileName);
+void get_string(FILE *file, char *str);
+void strip_comments(char *input_str, char *output_str);
 
 // This is a very basic solution. I will update so it complies with strings.
 int main(int argc, char **argv) {
   if (argc != 2)
     printf("Error\nFormat should be ./main filename\n");
-  else
-    deleteComments(argv[1]);
-
+  else {
+    FILE *input_file = fopen(argv[1], "r"); 
+    if (input_file == NULL) {
+      printf("File does not exist!\n");
+    } else {
+      char input_str[999];
+      char stripped_str[999];
+      get_string(input_file, input_str);
+      strip_comments(input_str, stripped_str);
+      printf("%s", stripped_str);
+    }
+  }
 
   return 0;
 }
 
-
-void deleteComments(char *fileName) {
-  FILE *inputFile;
-  inputFile = fopen(fileName, "r");
-  if (inputFile == NULL) {
-    printf("File does not exist!\n");
-  }
-  else {
-    int slash = 0;
-    bool newLine = true;
-    FILE *outputFile;
-    outputFile = fopen("output.txt", "w");
-    int c;
-    while ((c = getc(inputFile)) != EOF) {
-      if (c == '/' && getc(inputFile) == '/') {
-        newLine = false;
-      }
-      else if (c == '\n') {
-        putc(c, outputFile);
-          newLine = true;
-      }
-      else if (newLine == true) {
-        putc(c, outputFile);
-      } 
-    }
+void get_string(FILE *file, char *str) {
+  int c, i;
+  i = 0;
+  while ((c = fgetc(file)) != EOF) {
+    str[i] = c;
+    ++i;
   }
 }
 
+void strip_comments(char *input_str, char *output_str) {
+  int speech = 0; 
+  int quotes = 0;
+  bool comment = false;
+  int i, j;
+  j = 0;
+  for (i = 0; input_str[i] != EOF; ++i) {
+    if (input_str[i] == '\'') {
+      ++quotes;
+    } else if (input_str[i] == '\"') {
+      ++speech;
+    }
+    if (input_str[i] != '/' && !comment) {
+      output_str[j] = input_str[i];
+      ++j;
+    } else if (input_str[i] == '/' && (speech % 2 == 1 || quotes % 2 == 1) && !comment) {
+      output_str[j] = input_str[i];
+      ++j;
+    } else if (input_str[i] == '\n') {
+      comment = false;
+      output_str[j] = input_str[i];
+      ++j;
+    } else {
+      comment = true;
+    }
+    
+  }
+}
