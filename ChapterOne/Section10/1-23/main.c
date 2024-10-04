@@ -36,7 +36,8 @@ void get_string(FILE *file, char *str) {
 void strip_comments(char *input_str, char *output_str) {
   int speech = 0; 
   int quotes = 0;
-  bool comment = false;
+  bool single_comment = false;
+  bool multi_comment = false;
   int i, j;
   j = 0;
   for (i = 0; input_str[i] != EOF; ++i) {
@@ -45,19 +46,36 @@ void strip_comments(char *input_str, char *output_str) {
     } else if (input_str[i] == '\"') {
       ++speech;
     }
-    if (input_str[i] != '/' && !comment) {
+    if (input_str[i] != '/' && !single_comment && !multi_comment) {
       output_str[j] = input_str[i];
       ++j;
-    } else if (input_str[i] == '/' && (speech % 2 == 1 || quotes % 2 == 1) && !comment) {
+    } else if (input_str[i] == '/' && (speech % 2 == 1 || quotes % 2 == 1) && !single_comment && !multi_comment) {
       output_str[j] = input_str[i];
       ++j;
+    } else if (input_str[i] == '/') {
+      ++i;
+      if (input_str[i] == '*') {
+        multi_comment = true;    
+      } else if (input_str[i] == '/') {
+        single_comment = true;
+      }
     } else if (input_str[i] == '\n') {
-      comment = false;
-      output_str[j] = input_str[i];
-      ++j;
-    } else {
-      comment = true;
+      if (multi_comment) {
+        output_str[j] = '\n';
+        ++j;
+      } else if (single_comment) {
+        single_comment = false;
+        output_str[j] = '\n';
+        ++j;
+      } else {
+        output_str[j] = input_str[i];
+        ++j;
+      }
+    } else if (input_str[i] == '*') {
+      ++i;
+      if (input_str[i] == '/') {
+        multi_comment = false;  
+      } 
     }
-    
   }
 }

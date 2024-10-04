@@ -1,6 +1,8 @@
 #include <stdio.h> // include standard i/o stream
-
+/*
 int main (int argc, char **argc) {
   printf("// hello world"); // print something
   printf('/');
-}
+}*/
+
+here it is
